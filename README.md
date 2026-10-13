@@ -1,0 +1,1 @@
+# paradigmas-mobile-henrique
