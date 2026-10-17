@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Platform, Pressable, StatusBar, StyleSheet, Text, View } from 'react-native';
 
 // Espaço da barra de status/notch: no Android o sistema informa a altura,
@@ -5,32 +6,66 @@ import { Platform, Pressable, StatusBar, StyleSheet, Text, View } from 'react-na
 const topInset = Platform.OS === 'android' ? StatusBar.currentHeight ?? 24 : 48;
 
 export default function Navbar({ brand, links = [], ctaLabel, onLinkPress, onCtaPress }) {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [activeLinkId, setActiveLinkId] = useState(links[0]?.id);
+
+  function handleLinkPress(link) {
+    setActiveLinkId(link.id);
+    setIsMenuOpen(false);
+    onLinkPress?.(link);
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.bar}>
         <Text style={styles.brand}>{brand}</Text>
+
+        <Pressable
+          onPress={() => setIsMenuOpen((open) => !open)}
+          accessibilityRole="button"
+          accessibilityLabel={isMenuOpen ? 'Fechar menu' : 'Abrir menu'}
+          accessibilityState={{ expanded: isMenuOpen }}
+          hitSlop={8}
+          style={({ pressed }) => [styles.menuButton, pressed && styles.linkPressed]}
+        >
+          <Text style={styles.menuIcon}>{isMenuOpen ? '✕' : '☰'}</Text>
+        </Pressable>
       </View>
 
-      <View style={styles.menu}>
-        {links.map((link) => (
-          <Pressable
-            key={link.id}
-            onPress={() => onLinkPress?.(link)}
-            style={({ pressed }) => [styles.link, pressed && styles.linkPressed]}
-          >
-            <Text style={styles.linkText}>{link.label}</Text>
-          </Pressable>
-        ))}
+      {isMenuOpen ? (
+        <View style={styles.menu}>
+          {links.map((link) => {
+            const isActive = link.id === activeLinkId;
 
-        {ctaLabel ? (
-          <Pressable
-            onPress={onCtaPress}
-            style={({ pressed }) => [styles.cta, pressed && styles.ctaPressed]}
-          >
-            <Text style={styles.ctaText}>{ctaLabel}</Text>
-          </Pressable>
-        ) : null}
-      </View>
+            return (
+              <Pressable
+                key={link.id}
+                onPress={() => handleLinkPress(link)}
+                accessibilityRole="link"
+                accessibilityState={{ selected: isActive }}
+                style={({ pressed }) => [
+                  styles.link,
+                  isActive && styles.linkActive,
+                  pressed && styles.linkPressed,
+                ]}
+              >
+                <Text style={[styles.linkText, isActive && styles.linkTextActive]}>
+                  {link.label}
+                </Text>
+              </Pressable>
+            );
+          })}
+
+          {ctaLabel ? (
+            <Pressable
+              onPress={onCtaPress}
+              style={({ pressed }) => [styles.cta, pressed && styles.ctaPressed]}
+            >
+              <Text style={styles.ctaText}>{ctaLabel}</Text>
+            </Pressable>
+          ) : null}
+        </View>
+      ) : null}
     </View>
   );
 }
@@ -54,6 +89,17 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     letterSpacing: 0.5,
   },
+  menuButton: {
+    width: 48,
+    height: 48,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 8,
+  },
+  menuIcon: {
+    color: '#ffffff',
+    fontSize: 24,
+  },
   menu: {
     paddingVertical: 8,
     gap: 4,
@@ -67,9 +113,16 @@ const styles = StyleSheet.create({
   linkPressed: {
     backgroundColor: 'rgba(255, 255, 255, 0.12)',
   },
+  linkActive: {
+    backgroundColor: 'rgba(245, 158, 11, 0.15)',
+  },
   linkText: {
     color: '#e0e7ff',
     fontSize: 16,
+  },
+  linkTextActive: {
+    color: '#f59e0b',
+    fontWeight: '700',
   },
   cta: {
     minHeight: 48,
