@@ -108,3 +108,49 @@ No React Native dá para acompanhar essas mudanças com a API `AppState`, que in
   - **Stack (pilha):** cada tela nova é empilhada sobre a anterior, com botão e gesto de voltar.
   - **Drawer (menu lateral / hambúrguer):** esconde muitas opções, mas reduz a descoberta, e por isso costuma ficar para itens secundários.
   - **Modais e *bottom sheets*:** para tarefas curtas sem perder o contexto da tela de trás.
+
+---
+
+## 2. Pesquisa de campo: análise de 2 aplicativos
+
+Escolhi dois apps que uso todos os dias no meu iPhone e que também têm versão web: **Instagram** e **Uber**. Os prints estão em [`docs/apps`](docs/apps). Nos prints do Uber, borrei a localização atual, os destinos recentes e os nomes das ruas do mapa, porque são dados pessoais.
+
+### 2.1 Instagram
+
+| Feed (Início) | Reels |
+|---|---|
+| <img src="docs/apps/instagram-feed.png" width="250" alt="Feed do Instagram com post em carrossel e barra de abas flutuante"> | <img src="docs/apps/instagram-reels.png" width="250" alt="Reels do Instagram com ações na lateral direita"> |
+
+**Zona do polegar e navegação.** Toda a navegação principal fica numa barra de abas flutuante na parte de baixo da tela: Início, Reels, Direct (mensagens), Busca e Perfil. Na versão atual, o Direct e os Reels vieram para a barra de baixo; antes, o Direct ficava no canto superior direito, que é justamente a região mais difícil de alcançar com uma mão. As ações de cada post (curtir, comentar, repostar, enviar e salvar) ficam logo abaixo da imagem, numa linha horizontal, e o *scroll* infinito do feed é feito com o polegar, de baixo para cima. Nos Reels, a disposição muda: o vídeo ocupa a tela toda e as ações (curtir, comentar, repostar, enviar e salvar) ficam empilhadas na **lateral direita, na metade de baixo**, exatamente onde o polegar direito descansa quando seguro o celular com uma mão. O nome do perfil, o botão "Seguir" e a legenda ficam embaixo à esquerda, e a barra de progresso do vídeo fica logo acima da barra de abas.
+
+**Gestos.** Grande parte da interação é por gestos: deslizar para o lado no carrossel (os pontinhos abaixo da imagem indicam que o post tem mais fotos e em qual delas eu estou), tocar duas vezes na foto para curtir, segurar para ver uma prévia e puxar o feed para baixo para atualizar. Nos Reels, deslizar para cima passa para o próximo vídeo e segurar o dedo na tela pausa. É uma interface feita para ser usada sem olhar para botões. Como os gestos não aparecem na tela, o app mantém os mesmos comandos também como botões (o coração faz o mesmo que o toque duplo).
+
+**Tela, notch e safe area.** O app usa layout *edge-to-edge*: a foto do post passa por baixo da barra de status (relógio, Wi-Fi e bateria aparecem por cima da imagem). A barra de abas também fica por cima do conteúdo, com fundo translúcido, e o vídeo do próximo post aparece por trás dela. Ou seja, o app desenha a tela inteira, mas mantém os elementos tocáveis dentro da *safe area*: a barra de abas fica acima da barra de gestos do iPhone, e a imagem embaixo do relógio é só decoração.
+
+**Rede instável ou ausente.** Sem internet, o app abre mostrando os posts que já estavam em cache e um aviso de que não foi possível atualizar o feed. Curtidas e comentários feitos offline ficam pendentes e são enviados depois. As imagens são carregadas em resolução menor quando a conexão está lenta, e há uma opção de "Usar menos dados móveis" nas configurações.
+
+**Permissões.** A câmera, o microfone e a galeria só são pedidos quando eu toco para criar um story ou post, e as notificações são pedidas com uma tela própria do app antes da janela do sistema.
+
+**Comparação com o Instagram na web.** No navegador do computador, a navegação vira uma barra lateral fixa à esquerda, e o feed fica numa coluna central estreita, com muito espaço vazio dos lados. Na grade do perfil, passar o mouse sobre uma foto mostra o número de curtidas e comentários (*hover*), algo que não existe no celular. Os carrosséis usam setas clicáveis no lugar do deslizar. Criar posts e stories é bem mais limitado na web, porque a experiência foi pensada para a câmera do celular. Para mim, o app é a experiência principal e a web serve mais para responder mensagens no computador.
+
+### 2.2 Uber
+
+| Página inicial | Escolha do destino no mapa |
+|---|---|
+| <img src="docs/apps/uber-inicio.png" width="250" alt="Página inicial do Uber com busca Para onde e barra de abas inferior"> | <img src="docs/apps/uber-destino.png" width="250" alt="Tela do Uber para escolher o destino arrastando o mapa"> |
+
+**Permissões e localização.** O ícone de seta ao lado do relógio, na barra de status, indica que o app está usando a localização naquele momento. O Uber depende disso: a localização atual aparece no topo da tela (o ponto azul) e é usada como ponto de partida. Ele pede a permissão de localização logo no primeiro uso, explicando que precisa dela para achar o motorista, e, se eu negar, o app continua funcionando, mas obriga a digitar o endereço de partida. A permissão de notificações é justificada pelos avisos de "motorista chegando".
+
+**Zona do polegar e navegação.** Aqui há uma mistura. A barra de abas principal (Página inicial, Opções, Atividade, Conta) fica embaixo, flutuante e fácil de alcançar. Mas a ação mais importante, o campo "Para onde?", fica no terço superior da tela, assim como as abas Uber/Envios/iFood. Para compensar, os destinos recentes aparecem logo abaixo como itens grandes e tocáveis, então o caso mais comum (voltar para um lugar conhecido) se resolve com um toque, sem digitar. Os atalhos "Para você" são círculos grandes com ícone e texto, bem acima do mínimo de 44 pt de área de toque.
+
+Na tela de escolher o destino pelo mapa, essa lógica fica mais clara: tudo o que é para tocar foi para baixo, num *bottom sheet* com o título "Insira seu destino", o campo "Para onde?" e um botão "Pesquisar destino" que ocupa a largura inteira. Em cima ficam só o mapa e um botão circular de voltar no canto superior esquerdo, que é uma ação rara. O *bottom sheet* tem uma alça (o tracinho no topo) indicando que pode ser arrastado.
+
+**Gestos.** O destino pode ser escolhido arrastando o mapa: o marcador fica fixo no centro da tela e o mapa se move por baixo dele, como diz a instrução "Arraste o mapa para mover o marcador". É uma solução pensada para o dedo, porque arrastar um marcador pequeno com precisão seria difícil, já que o próprio dedo esconderia o ponto. Pinça para zoom e o ponto azul com o cone de direção (que vem da bússola do celular) completam a interação.
+
+**Contexto de uso.** O app é claramente pensado para quem está com pressa, em pé na rua: a primeira coisa na tela é a pergunta "Para onde?", e o restante é secundário. O aviso de promoção ("Ganhe 20% off...") aparece como um *banner* que pode ser fechado no X, colado acima da barra de abas, sem bloquear a tela inteira.
+
+**Rede instável ou ausente.** Diferente do Instagram, o Uber não tem como funcionar offline, porque pedir uma corrida exige o servidor. Sem conexão, ele mostra um aviso de que não há internet e bloqueia o pedido. Durante a corrida, se o sinal cai, o mapa congela na última posição conhecida e a viagem continua normalmente; a cobrança é feita no servidor.
+
+**Ciclo de vida.** Depois de pedir uma corrida, posso sair do app ou bloquear a tela: o andamento aparece na tela de bloqueio como Atividade ao Vivo (iOS) e em notificações. Se o sistema encerrar o app em segundo plano, ao abrir de novo ele volta direto para a corrida em andamento, porque o estado fica no servidor e não só no aparelho.
+
+**Comparação com o Uber na web.** Pelo navegador (m.uber.com) também dá para pedir corridas. No computador, a tela fica dividida, com o formulário de partida e destino à esquerda e um mapa grande à direita. A localização depende da permissão do navegador e costuma ser menos precisa que o GPS do celular, então muitas vezes é preciso digitar o endereço de partida. Não há Atividade ao Vivo nem notificações tão integradas, e a aba precisa ficar aberta para acompanhar o motorista. A versão web resolve o básico, mas o app é muito mais prático para o uso real, que é no meio da rua.
