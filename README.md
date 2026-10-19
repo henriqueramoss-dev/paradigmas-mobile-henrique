@@ -227,3 +227,56 @@ O histórico de commits mostra a evolução: primeiro fiz uma Navbar genérica p
 13. **Barra de status e notch.** No navegador, o header começa abaixo da barra de endereço. No app, ele começa no topo físico da tela, atrás do relógio e da câmera. Somei um `paddingTop` calculado (`StatusBar.currentHeight` no Android) e usei `<StatusBar style="light" />` para os ícones do sistema ficarem brancos sobre o fundo preto. O painel do menu, por abrir num `Modal`, precisa do mesmo cuidado.
 
 14. **Fonte padrão diferente.** O CSS do site não define `font-family`, então o navegador usa a fonte serifada padrão (Times), como se vê nos prints da web. No React Native, o padrão é a fonte do sistema (San Francisco no iOS, Roboto no Android), por isso o app fica com uma aparência mais "nativa" mesmo sem nenhuma configuração.
+
+---
+
+## 4. Conclusão
+
+Depois da pesquisa e da prática, percebi que preciso parar de pensar no mobile como "a web numa tela menor". Na web eu parto do desktop, conto com mouse, rede estável, deploy instantâneo e uma página que só existe enquanto a aba está aberta. No mobile, cada uma dessas premissas cai: o usuário usa o app com uma mão, com pressa e talvez sem internet, o sistema pode encerrar o app a qualquer momento, cada recurso do aparelho depende de permissão e cada versão publicada fica no celular das pessoas por muito tempo, depois de passar pela revisão das lojas. Na prática, isso muda minha ordem de decisões: primeiro penso no contexto de uso e na zona do polegar, depois nos estados de erro, carregamento e falta de rede, e só então no visual. No código, troquei a mentalidade de "documento estilizado por cascata" pela de "componentes com estilo explícito e estado", em que cada texto, cada área tocável e cada pedaço da tela (inclusive o notch) é responsabilidade minha.
+
+---
+
+## Referências
+
+APPLE. **Human Interface Guidelines**. Disponível em: <https://developer.apple.com/design/human-interface-guidelines>. Acesso em: 19 out. 2026.
+
+APPLE. **App Review Guidelines**. Disponível em: <https://developer.apple.com/app-store/review/guidelines>. Acesso em: 19 out. 2026.
+
+ESCUDELARIO, B.; PINHO, D. **React Native**: desenvolvimento de aplicativos mobile com React. São Paulo: Casa do Código, 2021.
+
+EXPO. **Expo Documentation**. Disponível em: <https://docs.expo.dev>. Acesso em: 19 out. 2026.
+
+GOOGLE. **Material Design 3**. Disponível em: <https://m3.material.io>. Acesso em: 19 out. 2026.
+
+HOOBER, S. How Do Users Really Hold Mobile Devices? **UXmatters**, 18 fev. 2013. Disponível em: <https://www.uxmatters.com/mt/archives/2013/02/how-do-users-really-hold-mobile-devices.php>. Acesso em: 19 out. 2026.
+
+REACT NATIVE. **Documentação oficial**. Disponível em: <https://reactnative.dev/docs/getting-started>. Acesso em: 19 out. 2026.
+
+---
+
+## Declaração de uso de IA
+
+ANTHROPIC. Claude Code (modelo Claude Opus 5.5). Ferramenta de inteligência artificial generativa.
+Data de uso: 17 out. 2026.
+Finalidade: criação do projeto Expo e da estrutura de pastas; redação inicial das seções de fundamentação, análise dos aplicativos (a partir dos meus prints do Instagram e do Uber), lista de diferenças e conclusão, revisadas por mim.
+Arquivos impactados: `README.md`, `docs/apps/LEIA-ME.md`.
+
+ANTHROPIC. Claude Code (modelo Claude Opus 5.5). Ferramenta de inteligência artificial generativa.
+Data de uso: 17 out. 2026.
+Finalidade: conversão dos prints para PNG e desfoque dos endereços e do mapa nos prints do Uber.
+Arquivos impactados: `docs/apps/*.png`.
+
+ANTHROPIC. Claude Code (modelo Claude Opus 5.5). Ferramenta de inteligência artificial generativa.
+Data de uso: 17 out. 2026.
+Finalidade: implementação da primeira versão do componente Navbar (genérica) com props, `StyleSheet` e `useState`.
+Arquivos impactados: `src/components/Navbar.js`, `App.js`.
+
+ANTHROPIC. Claude Code (modelo Claude Opus 5.5). Ferramenta de inteligência artificial generativa.
+Data de uso: 19 out. 2026.
+Finalidade: montagem da versão estática do header do meu projeto HC Store (Angular) para os prints, adaptação do componente Navbar a esse header (menu lateral com `Modal`, busca com `TextInput`, ícones extraídos dos SVGs originais) e redação da comparação entre o código Angular e o React Native.
+Arquivos impactados: `src/components/Navbar.js`, `App.js`, `assets/icons/*.png`, `docs/comparacao/web/*`, `README.md`.
+
+ANTHROPIC. Claude Code (modelo Claude Opus 5.5). Ferramenta de inteligência artificial generativa.
+Data de uso: 19 out. 2026.
+Finalidade: geração dos prints da comparação web x app com navegador automatizado (Playwright).
+Arquivos impactados: `docs/comparacao/*.png`.
