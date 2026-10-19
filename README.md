@@ -236,7 +236,7 @@ Depois da pesquisa e da prática, percebi que preciso parar de pensar no mobile 
 
 ---
 
-## Referências
+## 5. Referências
 
 APPLE. **Human Interface Guidelines**. Disponível em: <https://developer.apple.com/design/human-interface-guidelines>. Acesso em: 19 out. 2026.
 
@@ -254,7 +254,7 @@ REACT NATIVE. **Documentação oficial**. Disponível em: <https://reactnative.d
 
 ---
 
-## Declaração de uso de IA
+## 6. Declaração de uso de IA
 
 ANTHROPIC. Claude Code (modelo Claude Opus 5.5). Ferramenta de inteligência artificial generativa.
 Data de uso: 17 out. 2026.
