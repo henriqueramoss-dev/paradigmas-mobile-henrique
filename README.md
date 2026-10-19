@@ -10,7 +10,7 @@ Atividade da disciplina sobre as diferenças entre desenvolver para a web e para
 2. [Pesquisa de campo](#2-pesquisa-de-campo-análise-de-2-aplicativos)
 3. [Prática: da web para o React Native](#3-prática-da-web-para-o-react-native)
 4. [Conclusão](#4-conclusão)
-5. [Referências](#5-referências)
+5. [Referência](#5-referência)
 6. [Declaração de uso de IA](#6-declaração-de-uso-de-ia)
 
 ## Como executar
