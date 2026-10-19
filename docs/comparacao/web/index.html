@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HC Store - header</title>
+  <link rel="stylesheet" href="header.css">
+  <style>
+    body { margin: 0; }
+    main { padding: 48px 24px; }
+  </style>
+</head>
+<body>
+  <!--
+    Versão estática do header do projeto HC Store (Angular), copiada de
+    https://github.com/henriqueramoss-dev/hc-store-web/tree/develop/src/app/layout/header
+    As diretivas do Angular foram trocadas por HTML puro e um script pequeno
+    que faz o papel de toggleMenu() e fecharMenu().
+  -->
+  <header>
+    <a href="#" class="brand-link">
+      <h1><span class="hg">HC</span> STORE</h1>
+    </a>
+
+    <nav class="navbar-conteiner">
+      <a href="#">Coleções</a>
+      <a href="#">Explorar</a>
+      <a href="#">Outlet</a>
+    </nav>
+
+    <div class="right">
+      <div class="search-box">
+        <input type="text" placeholder="" />
+      </div>
+
+      <nav class="icons">
+        <a href="#" class="cart-trigger">
+          <img src="img/carrinho.svg" alt="Carrinho" />
+        </a>
+
+        <a href="#" class="login-trigger">
+          <img src="img/login.svg" alt="Login" />
+        </a>
+      </nav>
+    </div>
+
+    <button class="hamburger" aria-label="Abrir menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </header>
+
+  <div class="overlay-menu"></div>
+
+  <div class="menu-mobile">
+    <div class="menu-top">
+      <h1><span class="hg">HC</span> STORE</h1>
+      <div class="linha"></div>
+    </div>
+
+    <div class="search-mobile">
+      <input type="text" placeholder="" />
+    </div>
+
+    <a href="#">Coleções</a>
+    <a href="#">Explorar</a>
+    <a href="#">Outlet</a>
+
+    <a href="#">Carrinho</a>
+    <a href="#">Login</a>
+  </div>
+
+  <main>
+    <p>Conteúdo da página.</p>
+  </main>
+
+  <script>
+    const overlay = document.querySelector('.overlay-menu');
+    const menu = document.querySelector('.menu-mobile');
+
+    function toggleMenu() {
+      overlay.classList.toggle('active');
+      menu.classList.toggle('active');
+    }
+
+    document.querySelector('.hamburger').addEventListener('click', toggleMenu);
+    overlay.addEventListener('click', toggleMenu);
+  </script>
+</body>
+</html>
