@@ -10,8 +10,8 @@ Atividade da disciplina sobre as diferenças entre desenvolver para a web e para
 2. [Pesquisa de campo](#2-pesquisa-de-campo-análise-de-2-aplicativos)
 3. [Prática: da web para o React Native](#3-prática-da-web-para-o-react-native)
 4. [Conclusão](#4-conclusão)
-5. [Referências](#referências)
-6. [Declaração de uso de IA](#declaração-de-uso-de-ia)
+5. [Referências](#5-referências)
+6. [Declaração de uso de IA](#6-declaração-de-uso-de-ia)
 
 ## Como executar
 
@@ -273,10 +273,5 @@ Arquivos impactados: `src/components/Navbar.js`, `App.js`.
 
 ANTHROPIC. Claude Code (modelo Claude Opus 5.5). Ferramenta de inteligência artificial generativa.
 Data de uso: 19 out. 2026.
-Finalidade: montagem da versão estática do header do meu projeto HC Store (Angular) para os prints, adaptação do componente Navbar a esse header (menu lateral com `Modal`, busca com `TextInput`, ícones extraídos dos SVGs originais) e redação da comparação entre o código Angular e o React Native.
+Finalidade: montagem da versão estática do header do meu projeto HC Store (Angular), adaptação do componente Navbar a esse header (menu lateral com `Modal`, busca com `TextInput`, ícones extraídos dos SVGs originais) e redação da comparação entre o código Angular e o React Native.
 Arquivos impactados: `src/components/Navbar.js`, `App.js`, `assets/icons/*.png`, `docs/comparacao/web/*`, `README.md`.
-
-ANTHROPIC. Claude Code (modelo Claude Opus 5.5). Ferramenta de inteligência artificial generativa.
-Data de uso: 19 out. 2026.
-Finalidade: geração dos prints da comparação web x app com navegador automatizado (Playwright).
-Arquivos impactados: `docs/comparacao/*.png`.
