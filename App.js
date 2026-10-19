@@ -4,21 +4,20 @@ import { StyleSheet, Text, View } from 'react-native';
 import Navbar from './src/components/Navbar';
 
 const navLinks = [
-  { id: 'inicio', label: 'Início' },
-  { id: 'sobre', label: 'Sobre' },
-  { id: 'projetos', label: 'Projetos' },
-  { id: 'contato', label: 'Contato' },
+  { id: 'colecoes', label: 'Coleções' },
+  { id: 'explorar', label: 'Explorar' },
+  { id: 'outlet', label: 'Outlet' },
 ];
 
 export default function App() {
   return (
     <View style={styles.container}>
-      <Navbar brand="Henrique.dev" links={navLinks} ctaLabel="Fale comigo" />
+      <Navbar brandHighlight="HC" brandName="STORE" links={navLinks} />
 
       <View style={styles.content}>
-        <Text style={styles.title}>Bem-vindo ao meu portfólio</Text>
+        <Text style={styles.title}>Nova coleção</Text>
         <Text style={styles.subtitle}>
-          Esta é a Navbar do meu portfólio web reconstruída em React Native.
+          Header do site HC Store reconstruído em React Native.
         </Text>
       </View>
 
@@ -30,7 +29,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f8fafc',
+    backgroundColor: '#ffffff',
   },
   content: {
     flex: 1,
@@ -40,12 +39,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: '700',
-    color: '#1e1b4b',
+    color: '#000000',
     marginBottom: 8,
   },
   subtitle: {
     fontSize: 16,
     lineHeight: 24,
-    color: '#475569',
+    color: '#4b4b4b',
   },
 });
