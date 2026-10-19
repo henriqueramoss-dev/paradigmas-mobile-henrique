@@ -154,3 +154,76 @@ Na tela de escolher o destino pelo mapa, essa lógica fica mais clara: tudo o qu
 **Ciclo de vida.** Depois de pedir uma corrida, posso sair do app ou bloquear a tela: o andamento aparece na tela de bloqueio como Atividade ao Vivo (iOS) e em notificações. Se o sistema encerrar o app em segundo plano, ao abrir de novo ele volta direto para a corrida em andamento, porque o estado fica no servidor e não só no aparelho.
 
 **Comparação com o Uber na web.** Pelo navegador (m.uber.com) também dá para pedir corridas. No computador, a tela fica dividida, com o formulário de partida e destino à esquerda e um mapa grande à direita. A localização depende da permissão do navegador e costuma ser menos precisa que o GPS do celular, então muitas vezes é preciso digitar o endereço de partida. Não há Atividade ao Vivo nem notificações tão integradas, e a aba precisa ficar aberta para acompanhar o motorista. A versão web resolve o básico, mas o app é muito mais prático para o uso real, que é no meio da rua.
+
+---
+
+## 3. Prática: da web para o React Native
+
+Escolhi reconstruir o **header do HC Store**, a loja virtual que desenvolvi em Angular ([`hc-store-web`](https://github.com/henriqueramoss-dev/hc-store-web), em `src/app/layout/header`). Uma cópia estática do HTML e do CSS originais está em [`docs/comparacao/web`](docs/comparacao/web), e a versão mobile está em [`src/components/Navbar.js`](src/components/Navbar.js).
+
+### O componente
+
+- Recebe o conteúdo por props: `brandHighlight` e `brandName` (o "**HC** STORE"), `links` (lista de `{ id, label }`) e os callbacks opcionais `onLinkPress`, `onCartPress`, `onLoginPress` e `onSearch`.
+- É estilizado só com `StyleSheet.create` e Flexbox, mantendo as cores do site (fundo preto, verde `#1eff00`, busca cinza com borda arredondada).
+- Usa três `useState`:
+  - `isMenuOpen` abre e fecha o menu lateral, assim como o `menuMobileOpen`/`toggleMenu()` do componente Angular;
+  - `activeLinkId` destaca em verde a seção escolhida;
+  - `searchText` controla o campo de busca.
+- O menu lateral é um `Modal` com fundo escurecido. Tocar fora, no ✕ ou no botão voltar do Android fecha o menu.
+- Todas as áreas tocáveis têm no mínimo 48 × 48.
+
+```jsx
+<Navbar
+  brandHighlight="HC"
+  brandName="STORE"
+  links={[
+    { id: 'colecoes', label: 'Coleções' },
+    { id: 'explorar', label: 'Explorar' },
+    { id: 'outlet', label: 'Outlet' },
+  ]}
+/>
+```
+
+O histórico de commits mostra a evolução: primeiro fiz uma Navbar genérica para aprender a estrutura (`feat: reconstroi navbar...` e `feat: adiciona abertura do menu...`) e depois adaptei o componente para o header real do HC Store (`refactor: adapta navbar ao header do hc-store`).
+
+### Web x app
+
+| Web no desktop (*hover* em "Explorar") |
+|---|
+| <img src="docs/comparacao/web-desktop.png" width="640" alt="Header do HC Store no desktop"> |
+
+| Web em largura de celular | Web com menu aberto | App (menu fechado) | App (menu aberto, "Explorar" ativo) |
+|---|---|---|---|
+| <img src="docs/comparacao/web-mobile-menu-fechado.png" width="180" alt="Header web em largura mobile"> | <img src="docs/comparacao/web-mobile-menu-aberto.png" width="180" alt="Menu mobile da versão web aberto"> | <img src="docs/comparacao/app-menu-fechado.png" width="180" alt="App com menu fechado"> | <img src="docs/comparacao/app-menu-aberto.png" width="180" alt="App com menu aberto"> |
+
+> Os prints do app foram gerados com o mesmo código rodando via `react-native-web`, numa janela do tamanho de um iPhone (390 × 844). No Expo Go, o layout é o mesmo, com a barra de status real do aparelho por cima do `paddingTop`.
+
+### Diferenças encontradas na reconstrução
+
+1. **Não existe `header`, `nav`, `div`, `a`, `h1`, `button` nem `input`.** Toda a estrutura virou `View`, os textos viraram `Text`, os links e botões viraram `Pressable` e o `input` virou `TextInput`. A semântica que vinha das tags passou para props como `accessibilityRole="button"` e `accessibilityLabel="Abrir menu"`, que fazem o papel do `aria-label` do botão hambúrguer original.
+
+2. **Todo texto precisa estar dentro de `Text`.** No HTML, o "HC" fica num `<span class="hg">` dentro do `<h1>`. No React Native, a mesma ideia funciona com um `Text` dentro de outro `Text`. Esse é o único caso em que existe herança de estilo: o "STORE" herda o verde do `Text` de fora, e o "HC" sobrescreve com branco.
+
+3. **`flexDirection` padrão é `column`.** O `header` do site tinha `display: flex` e já ficava em linha. No React Native, toda `View` já é flex, mas empilha os filhos na vertical, então precisei de `flexDirection: 'row'` na barra. Já o menu lateral, que no CSS precisava de `flex-direction: column`, ficou em coluna sem declarar nada.
+
+4. **Estilos não têm cascata nem seletores.** O CSS do site usa seletores como `.navbar-conteiner a`, `.menu-mobile a` e `header h1`, que estilizam vários elementos de uma vez. No React Native não há seletor nem herança do pai para o filho: cada `Text` do menu recebe `styles.menuText` explicitamente, e o estado ativo é feito combinando estilos num array (`[styles.menuText, isActive && styles.menuTextActive]`).
+
+5. **Unidades sem `px` e sem `rem`.** `font-size: 1.5rem` e `min-height: 64px` (da versão mobile do CSS) viraram números puros (`fontSize: 24`, `minHeight: 64`), em pixels independentes de densidade. Porcentagem ainda funciona em alguns casos (`width: '78%'` no menu), mas `vh` não existe: o `height: 100vh` do menu virou um `Modal` que já ocupa a tela toda.
+
+6. **Não existe `:hover` nem `transition`.** No site, os links ficam verdes quando o mouse passa por cima (`a:hover { color: #1eff00; transition: 0.3s }`). No celular não há cursor, então o feedback passou a ser o toque: `Pressable` com `style={({ pressed }) => ...}` escurece o fundo enquanto o dedo está pressionando. O verde ficou para indicar o link **ativo**, controlado por estado. A animação de deslizar do menu (`transition: right 0.3s`) foi substituída pelo `animationType="fade"` do `Modal`.
+
+7. **Sem *media query*: a versão mobile é a padrão.** O site esconde os links, a busca e os ícones abaixo de 768px (`display: none`) e só então mostra o hambúrguer. No app não existe essa troca: o hambúrguer é sempre o comportamento normal. Mantive o ícone do carrinho visível na barra porque, numa loja, ele é uma das ações mais usadas.
+
+8. **`position: fixed` e `z-index` viraram `Modal`.** O menu do site é uma `div` com `position: fixed`, `right: -100%` e `z-index: 999`, que desliza para `right: 0` quando ganha a classe `.active`, com o overlay por trás. No React Native, o `Modal` desenha por cima de tudo, sem precisar calcular `z-index`. Montei o overlay e o painel lado a lado com Flexbox (`flexDirection: 'row'`, overlay com `flex: 1`). Isso evita um problema que encontrei no CSS original: como o `header` tem `z-index: 1000`, ele fica por cima do menu (999), e o "HC STORE" do topo do menu mobile some atrás dele (dá para ver no print da versão web com o menu aberto).
+
+9. **Mostrar e esconder é renderização condicional, não classe.** No Angular, o menu já existe na página e `[class.active]="menuMobileOpen"` só troca a classe. No React Native, `visible={isMenuOpen}` faz o `Modal` aparecer ou não. O `(click)="toggleMenu()"` do Angular virou `onPress={() => setIsMenuOpen(true)}`, e o `menuMobileOpen = !menuMobileOpen` virou a função `setIsMenuOpen` do `useState`.
+
+10. **Links não navegam sozinhos.** O site usa `routerLink="/colecoes"`, e o roteador do Angular já troca a página. No app, o `Pressable` só chama uma função; a navegação real precisaria do Expo Router ou do React Navigation. Por isso o componente expõe `onLinkPress` e deixa quem usa decidir o que fazer.
+
+11. **Imagens SVG não funcionam direto.** O site usa `<img src="assets/img/carrinho.svg">`. O componente `Image` do React Native não renderiza SVG sem uma biblioteca extra (`react-native-svg`). Como os SVGs do projeto tinham um PNG embutido, extraí as imagens para `assets/icons/*.png` e carreguei com `require(...)`, que também é diferente do caminho em string usado na web.
+
+12. **O campo de busca é controlado e abre o teclado virtual.** O `<input>` do site não tinha estado. No app, o `TextInput` usa `value` e `onChangeText` ligados ao `useState`, e precisei pensar no teclado: `returnKeyType="search"` troca o botão do teclado por "Buscar", e `placeholderTextColor` precisa ser definido à parte, porque o `placeholder` não herda cor de lugar nenhum.
+
+13. **Barra de status e notch.** No navegador, o header começa abaixo da barra de endereço. No app, ele começa no topo físico da tela, atrás do relógio e da câmera. Somei um `paddingTop` calculado (`StatusBar.currentHeight` no Android) e usei `<StatusBar style="light" />` para os ícones do sistema ficarem brancos sobre o fundo preto. O painel do menu, por abrir num `Modal`, precisa do mesmo cuidado.
+
+14. **Fonte padrão diferente.** O CSS do site não define `font-family`, então o navegador usa a fonte serifada padrão (Times), como se vê nos prints da web. No React Native, o padrão é a fonte do sistema (San Francisco no iOS, Roboto no Android), por isso o app fica com uma aparência mais "nativa" mesmo sem nenhuma configuração.
